@@ -1,5 +1,6 @@
 import { promises as fsPromises } from 'fs';
 import configs from '../configs';
+import logger from '../helpers/logger';
 
 async function connectDB() {
     const url = configs.url;
@@ -13,7 +14,7 @@ async function connectDB() {
             // Create a new file if it doesn't exist
             await fsPromises.writeFile(url, '[]', 'utf-8');
         } else {
-            console.log('Error reading records file:', err);
+            logger(`Error reading records file:, ${err}`, true);
         }
     }
 }

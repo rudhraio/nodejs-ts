@@ -9,11 +9,11 @@ async function main() {
     try {
         await connectDB();
         app.listen(PORT, () => {
-            logger(`Server is listening on port ${PORT}`);
-            logger(`Access it from http://localhost:${PORT}`);
+            logger(`Server is listening on port ${PORT}`, true);
+            logger(`Access it from http://localhost:${PORT}`, true);
         });
     } catch (err) {
-        logger(`Server is Failed to load \n[ERR]: ${err}`);
+        logger(`Server is Failed to load \n[ERR]: ${err}`, true);
     }
 }
 

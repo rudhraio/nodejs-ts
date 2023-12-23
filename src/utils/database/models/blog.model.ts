@@ -1,5 +1,6 @@
 import { promises as fsPromises } from 'fs';
 import configs from '../../configs';
+import logger from '../../helpers/logger';
 
 interface BlogInterface {
     id: string;
@@ -21,7 +22,7 @@ class BlogModel {
         try {
             await fsPromises.writeFile(configs.url, JSON.stringify(this.data, null, 2));
         } catch (err) {
-            console.log('Error writing blogs to file:', err);
+            logger(`Error writing blogs to file: ${err}`, false);
         }
     }
 
@@ -30,7 +31,7 @@ class BlogModel {
             const data = await fsPromises.readFile(configs.url, 'utf-8');
             this.data = JSON.parse(data);
         } catch (err) {
-            console.log('Error writing blogs to file:', err);
+            logger(`Error writing blogs to file:, ${err}`);
         }
     }
 
@@ -39,7 +40,6 @@ class BlogModel {
     }
 
     getById(id: any): BlogInterface | undefined {
-        console.log("id", id);
         return this.data.find(blog => blog.id == id);
     }
 
@@ -80,9 +80,7 @@ class BlogModel {
 
 function generateUniqueString() {
     const timestamp = new Date().getTime().toString(36);
-    console.log(timestamp);
     const randomString = Math.random().toString(36).substring(2, 6);
-    console.log(randomString);
 
     const uniqueString = `iD${randomString}${timestamp}`; // Combine timestamp and random string and take the first 16 characters
     return uniqueString;
