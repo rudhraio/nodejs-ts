@@ -6,6 +6,7 @@ interface BlogInterface {
     id: string;
     title: string;
     description: string;
+    slug: string;
     image?: string;
     author?: string;
     created_at: Date;
@@ -35,16 +36,28 @@ class BlogModel {
         }
     }
 
+    convertToURL(title: string) {
+        let url = title.toLowerCase();
+        url = url.replace(/[^\w\s]/g, '');
+        url = url.replace(/\s+/g, '-');
+        return url;
+    }
+
     list(): BlogInterface[] {
         return this.data;
     }
 
     getById(id: any): BlogInterface | undefined {
-        return this.data.find(blog => blog.id == id);
+        let data = this.data.find(blog => blog.id == id);
+        if (!data) {
+            data = this.data.find(blog => blog.slug == id);
+        }
+        return data
     }
 
     create(newBlog: BlogInterface): Promise<BlogInterface> {
         return new Promise((resolve, reject) => {
+            newBlog.slug = this.convertToURL(newBlog.title);
             newBlog.created_at = new Date();
             newBlog.id = generateUniqueString();
             this.data.push(newBlog);
@@ -58,6 +71,7 @@ class BlogModel {
         return new Promise((resolve, reject) => {
             const index = this.data.findIndex(blog => blog.id === id);
             if (index !== -1) {
+                updatedBlog.slug = this.convertToURL(updatedBlog.title);
                 this.data[index] = { ...this.data[index], ...updatedBlog };
                 this.saveBlogsToFile()
                     .then(() => resolve(this.data[index]))
