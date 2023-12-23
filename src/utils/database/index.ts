@@ -13,7 +13,7 @@ async function connectDB() {
             // Create a new file if it doesn't exist
             await fsPromises.writeFile(url, '[]', 'utf-8');
         } else {
-            console.error('Error reading records file:', err);
+            console.log('Error reading records file:', err);
         }
     }
 }

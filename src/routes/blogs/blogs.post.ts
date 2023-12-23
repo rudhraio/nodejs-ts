@@ -17,7 +17,7 @@ const validData = [
 blogsPOST.post("/", validator(validData), async (req, res) => {
     try {
         await Blog?.create(req.body);
-        return createResponse(res, "blog created successfully", []);
+        return createResponse(res, "blog created successfully", req.body);
     } catch (err) {
         return serverErrorResponse(res)
 

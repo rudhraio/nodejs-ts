@@ -6,7 +6,8 @@ interface BlogInterface {
     title: string;
     description: string;
     image?: string;
-    author?: string
+    author?: string;
+    created_at: Date;
 }
 
 class BlogModel {
@@ -20,13 +21,17 @@ class BlogModel {
         try {
             await fsPromises.writeFile(configs.url, JSON.stringify(this.data, null, 2));
         } catch (err) {
-            throw new Error('Error writing blogs to file');
+            console.log('Error writing blogs to file:', err);
         }
     }
 
     async loadBlogs() {
-        const data = await fsPromises.readFile(configs.url, 'utf-8');
-        this.data = JSON.parse(data);
+        try {
+            const data = await fsPromises.readFile(configs.url, 'utf-8');
+            this.data = JSON.parse(data);
+        } catch (err) {
+            console.log('Error writing blogs to file:', err);
+        }
     }
 
     list(): BlogInterface[] {
@@ -40,6 +45,7 @@ class BlogModel {
 
     create(newBlog: BlogInterface): Promise<BlogInterface> {
         return new Promise((resolve, reject) => {
+            newBlog.created_at = new Date();
             newBlog.id = generateUniqueString();
             this.data.push(newBlog);
             this.saveBlogsToFile()

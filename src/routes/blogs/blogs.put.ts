@@ -17,7 +17,7 @@ blogsPUT.put("/:id", validator(validData), async (req, res) => {
     try {
         const { id } = req.params;
         await Blog?.update(id, req.body);
-        return successResponse(res, "blog updated successfully", []);
+        return successResponse(res, `blog ${id} updated successfully`, []);
     } catch (err) {
         return serverErrorResponse(res)
 
